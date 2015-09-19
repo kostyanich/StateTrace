@@ -12,14 +12,14 @@ import java.util.stream.Stream;
 import org.stackgraph.event.GraphEvent;
 
 public class StateTrace implements Serializable {
-		private static final long serialVersionUID = 680313514779217977L;
-	
+	private static final long serialVersionUID = 680313514779217977L;
+
 	@SafeVarargs
-	public static List<StateTrace> traceOf(Stream<? extends GraphEvent> ... events) {
+	public static List<StateTrace> traceOf(
+			Stream<? extends GraphEvent>... events) {
 		List<StateTrace> traces = new ArrayList<StateTrace>();
-		of(events).map(s -> s.collect(toSet()))
-						 .filter(s -> s.size() > 0)
-						 .forEach(s -> traces.add(new StateTrace(s)));
+		of(events).map(s -> s.collect(toSet())).filter(s -> s.size() > 0)
+				.forEach(s -> traces.add(new StateTrace(s)));
 		return traces;
 	}
 
@@ -30,17 +30,17 @@ public class StateTrace implements Serializable {
 	public static StateTrace traceOfOne(Set<? extends GraphEvent> events) {
 		return new StateTrace(events);
 	}
-	
+
 	private Set<? extends GraphEvent> next;
-	
-	public StateTrace (Set<? extends GraphEvent> next) {
+
+	public StateTrace(Set<? extends GraphEvent> next) {
 		this.next = next;
 	}
 
 	public void apply(Graph graph) {
 		next.stream().forEach(e -> graph.apply(e));
 	}
-	
+
 	public void reverse(Graph graph) {
 		next.stream().forEach(e -> graph.reverse(e));
 	}
@@ -49,6 +49,4 @@ public class StateTrace implements Serializable {
 		return next;
 	}
 
-
-	
 }

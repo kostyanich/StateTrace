@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import org.stackgraph.event.StateChanged;
 
 public class Impact {
-	
+
 	public static Impact single(List<StateTrace> traces) {
 		return new Impact(traces, emptySet());
 	}
@@ -43,20 +43,21 @@ public class Impact {
 		} while (next.isPresent());
 		return traces;
 	}
-	
+
 	public Optional<Impact> nextIteration() {
 		Set<StateChanged> events = components.stream()
-											 .flatMap(Component::refreshedStates)
-											 .collect(toSet());
+				.flatMap(Component::refreshedStates).collect(toSet());
 		if (events.size() == 0) {
 			return Optional.empty();
 		} else {
 			traces.add(traceOfOne(events));
-			
-			Set<String> impactedNames = events.stream().map(StateChanged::getTarget)
-													   .collect(toSet());
-			Stream<Component> impacted = components.stream().filter(c -> impactedNames.contains(c.name()));
-			Set<Component> next = impacted.flatMap(c -> c.outbound().stream()).collect(toSet());
+
+			Set<String> impactedNames = events.stream()
+					.map(StateChanged::getTarget).collect(toSet());
+			Stream<Component> impacted = components.stream().filter(
+					c -> impactedNames.contains(c.name()));
+			Set<Component> next = impacted.flatMap(c -> c.outbound().stream())
+					.collect(toSet());
 			return Optional.of(new Impact(traces, next));
 		}
 	}

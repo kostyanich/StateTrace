@@ -16,8 +16,6 @@ import org.stackgraph.graph.Component;
 import org.stackgraph.graph.Impact;
 import org.stackgraph.graph.StateTrace;
 
-
-
 public class ComponentRemoved implements GraphEvent {
 	private static final long serialVersionUID = 2017531858514444296L;
 	private String target;
@@ -25,34 +23,38 @@ public class ComponentRemoved implements GraphEvent {
 	public ComponentRemoved(String target) {
 		this.target = target;
 	}
-	
+
 	public String getTarget() {
 		return target;
 	}
 
 	@Override
 	public Impact applyWithTrace(Map<String, Component> components) {
-		return removeComponent(components, (c) ->{
-			Set<Component> in = c.inbound();
-			Set<Component> out = c.outbound();
-			c.unlink();
-			List<StateTrace> traces = traceOf(
-						    concat(
-								   in.stream().map(from -> new DependencyRemoved(from.name(), target)),
-								   out.stream().map(to -> new DependencyRemoved(target, to.name()))
-							),
+		return removeComponent(
+				components,
+				(c) -> {
+					Set<Component> in = c.inbound();
+					Set<Component> out = c.outbound();
+					c.unlink();
+					List<StateTrace> traces = traceOf(
+							concat(in.stream().map(
+									from -> new DependencyRemoved(from.name(),
+											target)),
+									out.stream().map(
+											to -> new DependencyRemoved(target,
+													to.name()))),
 							of(new ComponentRemoved(target)));
 
-			return new Impact(traces, out);
-		});
+					return new Impact(traces, out);
+				});
 	}
 
-	private Impact removeComponent(Map<String, Component> components, 
+	private Impact removeComponent(Map<String, Component> components,
 			Function<Component, Impact> func) {
-		return ofNullable(components.remove(target))
-					   .flatMap(c-> Optional.of(func.apply(c)))
-					   .orElse(Impact.empty());		
+		return ofNullable(components.remove(target)).flatMap(
+				c -> Optional.of(func.apply(c))).orElse(Impact.empty());
 	}
+
 	@Override
 	public void apply(Map<String, Component> components) {
 		removeComponent(components, (c) -> empty());

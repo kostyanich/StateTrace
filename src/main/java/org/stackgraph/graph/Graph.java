@@ -8,12 +8,10 @@ import java.util.stream.Stream;
 
 import org.stackgraph.event.GraphEvent;
 
-
 public class Graph implements Serializable {
 	private static final long serialVersionUID = -8521182332939778317L;
-	
-	private Map<String, Component> components = new HashMap<String, Component>();
 
+	private Map<String, Component> components = new HashMap<String, Component>();
 
 	public void apply(GraphEvent graphEvent) {
 		graphEvent.apply(components);
@@ -28,19 +26,17 @@ public class Graph implements Serializable {
 		return impact.findTraces();
 	}
 
-    public Stream<Component> stream() {
-        return components.values().stream();        
-    }
+	public Stream<Component> stream() {
+		return components.values().stream();
+	}
 
-    public Component get(String name) {
-    	return components.get(name);
-    }
+	public Component get(String name) {
+		return components.get(name);
+	}
 
 	@Override
 	public String toString() {
 		return "Graph [components=" + components + "]";
 	}
-    
-    
 
 }

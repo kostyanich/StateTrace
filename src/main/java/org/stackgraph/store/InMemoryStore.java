@@ -22,7 +22,7 @@ public class InMemoryStore implements JournalStore {
 
 	public InMemoryStore() {
 	}
-	
+
 	@Override
 	public void add(int position, Graph graph) {
 		serialize(graph, emptyList()).ifPresent(
@@ -35,12 +35,12 @@ public class InMemoryStore implements JournalStore {
 				bytes -> store.put(position, new PersistedGraph(bytes)));
 	}
 
-	
 	@Override
 	public <R> Optional<R> lookup(int position, TriFunction<R> trace) {
-		return ofNullable(store.ceilingEntry(position))
-				.filter(e -> position <= e.getKey())
-				.flatMap(e-> deserialize(e.getKey(), e.getValue().getSerialized(), trace));
+		return ofNullable(store.ceilingEntry(position)).filter(
+				e -> position <= e.getKey()).flatMap(
+				e -> deserialize(e.getKey(), e.getValue().getSerialized(),
+						trace));
 	}
 
 	private Optional<byte[]> serialize(Graph graph, List<StateTrace> stateTrace) {
@@ -56,8 +56,10 @@ public class InMemoryStore implements JournalStore {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <R> Optional<R> deserialize(int position, byte[] buf, TriFunction< R> trace) {
-		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(buf))) {
+	private <R> Optional<R> deserialize(int position, byte[] buf,
+			TriFunction<R> trace) {
+		try (ObjectInputStream ois = new ObjectInputStream(
+				new ByteArrayInputStream(buf))) {
 			Graph graph = (Graph) ois.readObject();
 			List<StateTrace> stateTrace = (List<StateTrace>) ois.readObject();
 			return trace.apply(position, graph, stateTrace);

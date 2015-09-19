@@ -18,7 +18,7 @@ import org.stackgraph.event.StateChanged;
 
 public class Component implements Serializable {
 	private static final long serialVersionUID = -2049860240876588312L;
-	
+
 	private final String name;
 	private final Set<Component> outbound = new HashSet<Component>();
 	private final Set<Component> inbound = new HashSet<Component>();
@@ -44,7 +44,6 @@ public class Component implements Serializable {
 		from.unlinkOutbound(this);
 	}
 
-
 	public void linkInbound(Component component) {
 		inbound.add(component);
 	}
@@ -52,7 +51,7 @@ public class Component implements Serializable {
 	public void unlinkInbound(Component from) {
 		inbound.remove(from);
 	}
-	
+
 	public void linkOutbound(Component component) {
 		outbound.add(component);
 	}
@@ -65,14 +64,14 @@ public class Component implements Serializable {
 		unlinkInbound();
 		unlinkOutbound();
 	}
-	
+
 	public Set<Component> unlinkInbound() {
 		inbound.stream().forEach(from -> from.unlinkOutbound(this));
 		return inbound;
 	}
 
 	public Set<Component> unlinkOutbound() {
-		outbound.stream().forEach(to -> to.unlinkInbound(this));		
+		outbound.stream().forEach(to -> to.unlinkInbound(this));
 		return outbound;
 	}
 
@@ -89,13 +88,13 @@ public class Component implements Serializable {
 	public Stream<StateChanged> refreshedStates() {
 		Optional<StateChanged> ownState = refreshOwn();
 		Optional<StateChanged> derivedState = refreshDerived();
-		return of(ownState, derivedState).filter(Optional::isPresent)
-										 .map(Optional::get);
+		return of(ownState, derivedState).filter(Optional::isPresent).map(
+				Optional::get);
 	}
 
 	public Optional<StateChanged> refreshDerived() {
 		State highestOf = highestOf(concat(of(own.value()), derivedStates())
-										     .filter(State::warnAndHigh));
+				.filter(State::warnAndHigh));
 		if (highestOf != derived.value()) {
 			derived = derived.newState(highestOf);
 			return Optional.of(new StateChanged(this.name, derived));
@@ -115,13 +114,14 @@ public class Component implements Serializable {
 	}
 
 	private State highestOf(Stream<State> states) {
-		return concat(of(NO_DATA), states).sorted(byPriorityDesc()).findFirst().get();
+		return concat(of(NO_DATA), states).sorted(byPriorityDesc()).findFirst()
+				.get();
 	}
-	
+
 	public Stream<State> checkedStates() {
 		return checkStates.stream().map(NamedState::value);
 	}
-	
+
 	public Stream<State> derivedStates() {
 		return inbound.stream().map(Component::derived);
 	}
@@ -139,9 +139,8 @@ public class Component implements Serializable {
 	}
 
 	public Optional<NamedState> getCheckStated(String name) {
-		return checkStates.stream()
-						  .filter(c -> c.name().equals(name))
-						  .findFirst();
+		return checkStates.stream().filter(c -> c.name().equals(name))
+				.findFirst();
 	}
 
 	public Set<Component> outbound() {
@@ -179,15 +178,13 @@ public class Component implements Serializable {
 
 	@Override
 	public String toString() {
-		String inboundDesc = inbound.stream().map(c->c.name()).collect(Collectors.joining(", "));
-		String outboundDesc = outbound.stream().map(c->c.name()).collect(Collectors.joining(", "));
+		String inboundDesc = inbound.stream().map(c -> c.name())
+				.collect(Collectors.joining(", "));
+		String outboundDesc = outbound.stream().map(c -> c.name())
+				.collect(Collectors.joining(", "));
 		return "Component [name=" + name + ", checkStates=" + checkStates
-				+ ", derived=" + derived + ", own=" + own 
-				+ ", in=" + inboundDesc + ", out=" + outboundDesc + "]";
+				+ ", derived=" + derived + ", own=" + own + ", in="
+				+ inboundDesc + ", out=" + outboundDesc + "]";
 	}
-
-
-
-
 
 }

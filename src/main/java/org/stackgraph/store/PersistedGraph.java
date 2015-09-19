@@ -1,8 +1,7 @@
 package org.stackgraph.store;
 
-
 public class PersistedGraph {
-	
+
 	private final byte[] serialized;
 
 	public PersistedGraph(byte[] serialized) {
@@ -12,6 +11,5 @@ public class PersistedGraph {
 	public byte[] getSerialized() {
 		return serialized;
 	}
-
 
 }

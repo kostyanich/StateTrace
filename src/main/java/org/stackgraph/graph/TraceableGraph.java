@@ -30,7 +30,6 @@ public class TraceableGraph {
 		this.traceStart = traceStart;
 	}
 
-
 	public Optional<TraceableGraph> moveAt(int position) {
 		return this.journal.graphAt(position, (pos, graph, traces) -> {
 			if (position <= pos) {
@@ -51,14 +50,13 @@ public class TraceableGraph {
 
 	public Optional<TraceableGraph> back() {
 		int tracePos = backwardPosition(globalPosition - 1);
-		Optional<TraceableGraph> repositioned = 
-				traces.filter(t -> tracePos < t.size())
-					  .map(t -> t.get(tracePos))
-					  .flatMap(s -> graph.map(g -> {
-							s.reverse(g);
-							globalPosition--;
-							return TraceableGraph.this;
-					  }));
+		Optional<TraceableGraph> repositioned = traces
+				.filter(t -> tracePos < t.size()).map(t -> t.get(tracePos))
+				.flatMap(s -> graph.map(g -> {
+					s.reverse(g);
+					globalPosition--;
+					return TraceableGraph.this;
+				}));
 		if (repositioned.isPresent()) {
 			return repositioned;
 		} else {
@@ -73,8 +71,7 @@ public class TraceableGraph {
 	public Optional<TraceableGraph> forward() {
 		int tracePos = forwardPosition(globalPosition + 1);
 		Optional<TraceableGraph> repositioned = traces
-				.filter(t -> tracePos >= 0)
-				.map(t -> t.get(tracePos))
+				.filter(t -> tracePos >= 0).map(t -> t.get(tracePos))
 				.flatMap(s -> graph.map(g -> {
 					s.apply(g);
 					globalPosition++;
@@ -98,6 +95,5 @@ public class TraceableGraph {
 	public Optional<Graph> getGraph() {
 		return graph;
 	}
-	
-	
+
 }

@@ -9,8 +9,8 @@ import org.stackgraph.graph.TriFunction;
 
 public interface JournalStore {
 	void add(int position, Graph graph);
-	
+
 	void add(int position, Graph graph, List<StateTrace> stateChange);
-	
+
 	<R> Optional<R> lookup(int position, TriFunction<R> trace);
 }

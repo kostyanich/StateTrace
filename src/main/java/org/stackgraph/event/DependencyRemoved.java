@@ -9,14 +9,13 @@ import java.util.Map;
 import org.stackgraph.graph.Component;
 import org.stackgraph.graph.Impact;
 
-
 public class DependencyRemoved implements GraphEvent {
 	private static final long serialVersionUID = 5511670472667680342L;
 	private final String from;
 	private final String to;
-	
+
 	public DependencyRemoved(String from, String to) {
-		if (from.equals(to)){
+		if (from.equals(to)) {
 			throw new IllegalArgumentException("Cannot depend on itself");
 		}
 		this.from = from;
@@ -27,13 +26,13 @@ public class DependencyRemoved implements GraphEvent {
 	public Impact applyWithTrace(Map<String, Component> components) {
 		apply(components);
 		Component toComponent = components.get(to);
-		return new Impact(traceOf(of(this)), singleton(toComponent)); 
+		return new Impact(traceOf(of(this)), singleton(toComponent));
 	}
 
 	@Override
 	public void apply(Map<String, Component> components) {
 		Component fromComponent = components.get(from);
-		Component toComponent = components.get(to);		
+		Component toComponent = components.get(to);
 		toComponent.unlinkDependsOn(fromComponent);
 	}
 
@@ -41,11 +40,11 @@ public class DependencyRemoved implements GraphEvent {
 	public void reverse(Map<String, Component> components) {
 		new DependencyAdded(from, to).apply(components);
 	}
-	
+
 	public String getFrom() {
 		return from;
 	}
-	
+
 	public String getTo() {
 		return to;
 	}
@@ -85,6 +84,5 @@ public class DependencyRemoved implements GraphEvent {
 	public String toString() {
 		return "DependencyRemoved [from=" + from + ", to=" + to + "]";
 	}
-	
-	
+
 }

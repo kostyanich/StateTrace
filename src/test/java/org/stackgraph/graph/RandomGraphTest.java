@@ -13,21 +13,22 @@ public class RandomGraphTest extends GraphTestBase {
 
 	private int numberOfGraphs = 20;
 	private int numberOfEvents = 200;
-	
+
 	@Test
 	public void traceTest() {
-		range(0, numberOfGraphs).forEach(i -> {
-			
-			RandomGraphGenerator generator = new RandomGraphGenerator(VERTEX, COMPONENTS, STATES);
-			graph = generator.generate();
-			
-			range(0, numberOfEvents).forEach(j -> {
-					graph.applyTrace(generator.randomEvent());
-					new VerifyProperties(graph).verify();
-			});
-			
-			System.out.println("graph #" + i + " verified.");
-		});
+		range(0, numberOfGraphs).forEach(
+				i -> {
+					RandomGraphGenerator generator = new RandomGraphGenerator(
+							VERTEX, COMPONENTS, STATES);
+					graph = generator.generate();
+
+					range(0, numberOfEvents).forEach(j -> {
+						graph.applyTrace(generator.randomEvent());
+						new VerifyProperties(graph).verify();
+					});
+
+					System.out.println("graph #" + i + " verified.");
+				});
 	}
 
 }

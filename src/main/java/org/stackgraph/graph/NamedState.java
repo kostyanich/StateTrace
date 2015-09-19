@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class NamedState implements Serializable {
 	public static String OWN = "own";
 	public static String DERIVED = "derived";
-	
+
 	private static final long serialVersionUID = -3235817794424805989L;
 	private final String name;
 	private final State value;
 	private final State oldValue;
+
 	public NamedState(String name) {
 		this(name, State.NO_DATA);
 	}
-	
+
 	public NamedState(String name, State value) {
 		this(name, State.NO_DATA, value);
 	}
@@ -70,5 +71,4 @@ public class NamedState implements Serializable {
 		return "NamedState [name=" + name + ", value=" + value + "]";
 	}
 
-	
 }

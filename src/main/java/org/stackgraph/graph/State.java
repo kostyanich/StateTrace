@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 public enum State {
 	NO_DATA(0), CLEAR(1), WARNING(2), ALERT(3);
-	
+
 	private int priority;
-	
+
 	State(int priority) {
 		this.priority = priority;
 	}
@@ -20,11 +20,11 @@ public enum State {
 	}
 
 	public static Comparator<State> byPriorityDesc() {
-		return new Comparator<State>(){
+		return new Comparator<State>() {
 			public int compare(State o1, State o2) {
 				return o2.priority - o1.priority;
-			} 
-			
+			}
+
 		};
 	}
 

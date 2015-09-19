@@ -22,10 +22,9 @@ public class StateChanged implements GraphEvent {
 	@Override
 	public Impact applyWithTrace(Map<String, Component> components) {
 		apply(components);
-		Component component = components.get(target);		
-		return new Impact(
-					traceOf(of(this), component.refreshedStates()), 
-					component.outbound());
+		Component component = components.get(target);
+		return new Impact(traceOf(of(this), component.refreshedStates()),
+				component.outbound());
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class StateChanged implements GraphEvent {
 	public String getTarget() {
 		return target;
 	}
-	
+
 	public NamedState getNewState() {
 		return newState;
 	}
